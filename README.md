@@ -15,6 +15,7 @@ Application web de gestion des CRA (Compte Rendu d Activite), avec deux espaces 
 - [Donnees demo](#donnees-demo)
 - [Configuration](#configuration)
 - [Test API avec Swagger](#test-api-avec-swagger)
+- [Demo Video](#demo-video)
 
 
 ## Quick Start en 60 secondes
@@ -94,3 +95,7 @@ La documentation API est auto-generee via Swagger/OpenAPI (plus rapide a exploit
 
 Lien:
 - http://localhost:8080/swagger-ui/index.html
+
+## Demo Video
+
+[▶️ Voir la démo](https://drive.google.com/file/d/1xv2CEI4bIS7GuGsE07_w1e25adURifAD/view?usp=sharing)
