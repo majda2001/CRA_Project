@@ -21,10 +21,9 @@ Application web de gestion des CRA (Compte Rendu d Activite), avec deux espaces 
 
 ## Quick Start en 60 secondes
 1. Configurer le backend:
-	- Creer ou mettre a jour [CRA-backend/.env](CRA-backend/.env)
+	- creer ou mettre a jour les donnees critiques de l'application [CRA-backend/.env](CRA-backend/.env)
 2. Lancer le backend (depuis [CRA-backend](CRA-backend)):
-	- Windows: `mvnw.cmd spring-boot:run`
-	- Linux/macOS: `./mvnw spring-boot:run`
+	
 3. Lancer le frontend (depuis [CRA-frontend](CRA-frontend)):
 	- `npm install`
 	- `ng serve`
@@ -34,7 +33,7 @@ Application web de gestion des CRA (Compte Rendu d Activite), avec deux espaces 
 
 ## Presentation
 L application permet:
-- la saisie et la gestion des CRA cote collaborateur
+- la saisie des CRA cote collaborateur
 - la gestion des collaborateurs, missions, affectations et validation des CRA cote admin
 
 ## Stack technique
@@ -58,7 +57,7 @@ Versions utilisees:
 - Validation des CRA
 
 ### Espace Collaborateur
-- Gestion de ses CRA
+- remplissage de ses CRA
 - Soumission de CRA
 
 ## Architecture du projet
@@ -78,10 +77,6 @@ Pour tester l activation par email d un collaborateur:
 Les donnees Admin sont configurees dans:
 - [CRA-backend/.env](CRA-backend/.env)
 
-## Configuration
-1. Creer [CRA-backend/.env](CRA-backend/.env)
-2. Renseigner les variables necessaires
-
 Variables importantes:
 - JWT_SECRET
 - ADMIN_EMAIL
@@ -92,74 +87,10 @@ Variables importantes:
 - APP_TIMEZONE
 - CRA_WINDOW_START_DAY
 - CRA_WINDOW_END_DAY
-- APP_DEMO_ENABLED
 
-## Demarrage rapide
-
-### 1. Backend
-Depuis [CRA-backend](CRA-backend):
-
-Sous Linux/macOS:
-```bash
-./mvnw spring-boot:run
-```
-
-Sous Windows:
-```bash
-mvnw.cmd spring-boot:run
-```
-
-Backend disponible sur:
-- http://localhost:8080
-
-### 2. Frontend
-Depuis [CRA-frontend](CRA-frontend):
-
-```bash
-npm install
-ng serve
-```
-
-Frontend disponible sur:
-- http://localhost:4200
-
-## Compilation
-
-### Backend
-Depuis [CRA-backend](CRA-backend):
-```bash
-./mvnw -DskipTests compile
-```
-
-### Frontend
-Depuis [CRA-frontend](CRA-frontend):
-```bash
-npm run build
-```
 
 ## Test API avec Swagger
 La documentation API est auto-generee via Swagger/OpenAPI (plus rapide a exploiter dans ce projet que Postman).
 
 Lien:
 - http://localhost:8080/swagger-ui/index.html
-
-## Video de demonstration
-Oui, vous pouvez inserer une video dans ce README.
-
-Miniature cliquable vers la video (remplacer l URL par votre video finale):
-
-[![Apercu video CRA Platform](CRA-frontend/public/assets/CBX.png)](https://www.youtube.com/watch?v=XXXXXXXXXXX)
-
-Option 1: video versionnee dans le repository
-1. Ajouter le fichier video, par exemple: docs/demo.mp4
-2. Ajouter un lien Markdown:
-
-```markdown
-[Voir la video de demonstration](docs/demo.mp4)
-```
-
-Option 2: video hebergee (YouTube, Vimeo, etc.)
-
-```markdown
-[Voir la video de demonstration](https://www.youtube.com/watch?v=XXXXXXXXXXX)
-```
