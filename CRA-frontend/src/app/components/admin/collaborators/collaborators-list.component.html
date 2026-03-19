@@ -1,0 +1,174 @@
+<section class="page-shell">
+  <header class="page-header">
+    <div class="header-content">
+      <p class="eyebrow">Administration</p>
+      <h1>Gestion des collaborateurs</h1>
+      <p class="subtitle">Gerez les acces et les informations de vos consultants et salaries.</p>
+    </div>
+    <button class="btn-primary" type="button" (click)="openCreateModal()">
+      <span class="icon">+</span> Nouveau collaborateur
+    </button>
+  </header>
+
+  <div class="content-card">
+    <div class="toolbar">
+      <div class="search-wrap">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input
+          type="text"
+          placeholder="Rechercher par nom, email..."
+          class="search-input"
+          (input)="onSearch($event)"
+        />
+      </div>
+
+      <div class="filters-group">
+        <select class="filter-select" (change)="onContractChange($event)">
+          <option value="">Tous les contrats</option>
+          <option value="CDI">CDI</option>
+          <option value="CDD">CDD</option>
+          <option value="Freelance">Freelance</option>
+        </select>
+        <select class="filter-select" (change)="onStatusChange($event)">
+          <option value="">Tous statuts</option>
+          <option value="Actif">Actif</option>
+          <option value="Inactif">Inactif</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <div *ngIf="loading" class="skeleton-wrap">
+        <div class="skeleton-row" *ngFor="let item of skeletonItems"></div>
+      </div>
+
+      <table *ngIf="!loading" class="modern-table">
+        <thead>
+          <tr>
+            <th>Collaborateur</th>
+            <th>Role & Contrat</th>
+            <th>Anciennete</th>
+            <th class="text-center">Statut</th>
+            <th class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let collaborateur of filteredCollaborateurs">
+            <td>
+              <div class="user-cell">
+                <div class="avatar-circle" [ngClass]="getAvatarColor(collaborateur.firstName)">
+                  {{ collaborateur.firstName.charAt(0) }}{{ collaborateur.lastName.charAt(0) }}
+                </div>
+                <div class="user-info">
+                  <span class="name">{{ collaborateur.firstName }} {{ collaborateur.lastName }}</span>
+                  <span class="email">{{ collaborateur.email }}</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="meta-cell">
+                <span class="role-text">{{ collaborateur.statut }}</span>
+                <span class="contract-badge">{{ collaborateur.contrat || 'CDI' }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="seniority-text">{{ collaborateur.seniorite || 1 }}</span>
+            </td>
+            <td class="text-center">
+              <div class="status-toggle" [title]="collaborateur.active ? 'Desactiver' : 'Activer'">
+                <label class="switch">
+                  <input type="checkbox" [checked]="collaborateur.active" (change)="toggleActivation(collaborateur)" />
+                  <span class="slider round"></span>
+                </label>
+                <span class="status-label" [class.active]="collaborateur.active">
+                  {{ collaborateur.active ? 'Actif' : 'Inactif' }}
+                </span>
+              </div>
+            </td>
+            <td class="text-right">
+              <button class="action-btn" (click)="openEditModal(collaborateur)" title="Editer">E</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="empty-state" *ngIf="!loading && filteredCollaborateurs.length === 0">
+        <div class="empty-icon">&#128100;</div>
+        <h3>Aucun collaborateur trouve</h3>
+        <p>Essayez de modifier vos filtres ou ajoutez un nouveau collaborateur.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
+    <section class="modal" (click)="$event.stopPropagation()">
+      <header class="modal-header">
+        <h2>{{ editMode ? 'Modifier le profil' : 'Nouveau collaborateur' }}</h2>
+        <button class="close-btn" (click)="closeModal()">X</button>
+      </header>
+
+      <form [formGroup]="collaborateurForm" (ngSubmit)="submitForm()" class="modal-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Prenom</label>
+            <input type="text" formControlName="firstName" placeholder="Ex: Jean" />
+          </div>
+          <div class="form-group">
+            <label>Nom</label>
+            <input type="text" formControlName="lastName" placeholder="Ex: Dupont" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Email professionnel</label>
+          <input type="email" formControlName="email" [readonly]="editMode" placeholder="jean.dupont@entreprise.com" />
+        </div>
+
+        <p class="form-info" *ngIf="!editMode">
+          Une invitation email sera envoyee pour definir le mot de passe et activer le compte.
+        </p>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Statut</label>
+            <select formControlName="statut">
+              <option value="MISSION">En mission</option>
+              <option value="INTERCONTRACT">Intercontrat</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Contrat</label>
+            <select formControlName="contrat">
+              <option value="CDI">CDI</option>
+              <option value="CDD">CDD</option>
+              <option value="INDEP">Freelance/Indep</option>
+              <option value="PORTAGE">Portage</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Seniorite</label>
+            <select formControlName="seniorite">
+              <option value="JUNIOR">Junior (1-2 ans)</option>
+              <option value="CONFIRME">Confirme (3-5 ans)</option>
+              <option value="EXPERT">Expert (5+ ans)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Salaire / TJM</label>
+            <input type="number" formControlName="salaire" placeholder="0" />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-ghost" type="button" (click)="closeModal()">Annuler</button>
+          <button class="btn-primary full-width" type="submit" [disabled]="collaborateurForm.invalid || saving">
+            {{ saving ? 'Enregistrement...' : (editMode ? 'Sauvegarder les modifications' : 'Creer et envoyer invitation') }}
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+</section>

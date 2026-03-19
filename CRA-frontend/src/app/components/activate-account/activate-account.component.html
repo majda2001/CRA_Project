@@ -1,0 +1,62 @@
+<section class="activation-page">
+  <div class="bg-mesh"></div>
+  <div class="bg-grid"></div>
+
+  <section class="activation-card" aria-label="Finalisation du compte">
+    <header class="brand-header">
+      <div class="brand-logo-wrap" aria-hidden="true">
+        <img class="brand-logo" src="assets/CBX.png" alt="CBX Group" />
+      </div>
+      <div class="brand-text">
+        <div class="brand-title">CBX</div>
+        <div class="brand-subtitle">GROUP</div>
+      </div>
+    </header>
+
+    <div class="welcome-block">
+      <h1>Activez votre acces</h1>
+      <p>Definissez votre mot de passe pour terminer la configuration de votre compte.</p>
+    </div>
+
+    <p *ngIf="success" class="hint success">{{ success }}</p>
+    <p *ngIf="error" class="hint error">{{ error }}</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="activation-form" *ngIf="!success">
+      <label for="password">Nouveau mot de passe</label>
+      <div class="input-shell">
+        <span class="input-icon" aria-hidden="true">*</span>
+        <input
+          id="password"
+          [type]="showPassword ? 'text' : 'password'"
+          formControlName="password"
+          placeholder="Entrez votre mot de passe"
+          autocomplete="new-password"
+        />
+        <button type="button" class="toggle-password" (click)="showPassword = !showPassword">
+          {{ showPassword ? 'Masquer' : 'Afficher' }}
+        </button>
+      </div>
+
+      <label for="confirmPassword">Confirmer le mot de passe</label>
+      <div class="input-shell">
+        <span class="input-icon" aria-hidden="true">*</span>
+        <input
+          id="confirmPassword"
+          [type]="showConfirmPassword ? 'text' : 'password'"
+          formControlName="confirmPassword"
+          placeholder="Confirmez le mot de passe"
+          autocomplete="new-password"
+        />
+        <button type="button" class="toggle-password" (click)="showConfirmPassword = !showConfirmPassword">
+          {{ showConfirmPassword ? 'Masquer' : 'Afficher' }}
+        </button>
+      </div>
+
+      <p class="hint">{{ passwordHint }}</p>
+
+      <button class="submit-btn" type="submit" [disabled]="loading">
+        {{ loading ? 'Enregistrement...' : 'Enregistrer mon mot de passe' }}
+      </button>
+    </form>
+  </section>
+</section>

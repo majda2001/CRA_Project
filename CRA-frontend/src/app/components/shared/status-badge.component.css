@@ -1,0 +1,16 @@
+.badge {
+  padding: 0.32rem 0.8rem;
+  border-radius: 9999px;
+  font-size: 0.73rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: inline-block;
+  letter-spacing: 0.05em;
+  border: 1px solid transparent;
+}
+
+.DRAFT { background-color: #edf2fd; color: #425983; border-color: #d7e2f7; }
+.SUBMITTED { background-color: #fff1da; color: #a06006; border-color: #fde3b7; }
+.APPROVED { background-color: #dcf7ec; color: #0b825f; border-color: #b9ebd5; }
+.REJECTED { background-color: #ffe8ee; color: #af3e59; border-color: #f8cad7; }
+.INVALIDATED { background-color: #f1eaff; color: #6648b2; border-color: #dfd0ff; }

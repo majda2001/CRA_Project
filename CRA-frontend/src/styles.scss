@@ -1,0 +1,166 @@
+/* Angular Material Theme */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* App Global Design System */
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+:root {
+	--bg-page: #f8fafc;        /* Slate 50 - Softer background */
+	--bg-panel: #ffffff;       /* Pure white panels */
+	--bg-panel-soft: #f1f5f9;  /* Slate 100 */
+	--text-main: #0f172a;      /* Slate 900 - Sharp, professional text */
+	--text-muted: #64748b;     /* Slate 500 - Balanced muted text */
+	--border-soft: #e2e8f0;    /* Slate 200 */
+	--brand-500: #3b82f6;      /* Blue 500 - Professional Blue */
+	--brand-600: #2563eb;      /* Blue 600 - Primary Action */
+	--brand-700: #1d4ed8;      /* Blue 700 - Hover State */
+	--ok-500: #10b981;         /* Emerald 500 */
+	--warn-500: #f59e0b;       /* Amber 500 */
+	--danger-500: #ef4444;     /* Red 500 */
+	--shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); /* Subtle, modern shadow */
+
+    /* Material Overrides Compat */
+    --mdc-theme-primary: var(--brand-600);
+}
+
+[data-theme='dark'] {
+	--bg-page: #020617;        /* Slate 950 */
+	--bg-panel: #0f172a;       /* Slate 900 */
+	--bg-panel-soft: #1e293b;  /* Slate 800 */
+	--text-main: #f8fafc;      /* Slate 50 */
+	--text-muted: #94a3b8;     /* Slate 400 */
+	--border-soft: #1e293b;    /* Slate 800 */
+	--brand-500: #60a5fa;      /* Blue 400 */
+	--brand-600: #3b82f6;      /* Blue 500 */
+	--brand-700: #2563eb;      /* Blue 600 */
+	--ok-500: #34d399;
+	--warn-500: #fbbf24;
+	--danger-500: #f87171;
+	--shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	min-height: 100%;
+	font-family: 'Manrope', 'Segoe UI', sans-serif;
+	color: var(--text-main);
+	background: var(--bg-page);
+	transition: background-color 240ms ease, color 240ms ease;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	margin: 0;
+	font-family: 'Sora', 'Segoe UI', sans-serif;
+	letter-spacing: -0.01em;
+	color: var(--text-main);
+}
+
+p {
+    margin: 0 0 1rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+a {
+	color: var(--brand-600);
+	text-decoration: none;
+    transition: color 0.2s;
+}
+
+a:hover {
+	color: var(--brand-700);
+}
+
+/* Components */
+.panel {
+	background: var(--bg-panel);
+	border: 1px solid var(--border-soft);
+	border-radius: 20px;
+	box-shadow: var(--shadow-card);
+	padding: 1.5rem;
+	transition: background-color 240ms ease, border-color 240ms ease, box-shadow 240ms ease;
+}
+
+.pill {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 999px;
+	padding: 0.3rem 0.8rem;
+	font-size: 0.82rem;
+	font-weight: 700;
+}
+
+.btn-primary {
+	border: none;
+	border-radius: 14px;
+	background: linear-gradient(95deg, var(--brand-500), #4865ff);
+	color: #fff;
+	font-weight: 700;
+	padding: 0.72rem 1.1rem;
+	cursor: pointer;
+	transition: transform 0.15s ease, box-shadow 0.2s ease;
+	box-shadow: 0 8px 20px rgba(53, 88, 255, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Manrope', sans-serif;
+}
+
+.btn-primary:hover {
+	transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(53, 88, 255, 0.4);
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    pointer-events: none;
+    background: var(--text-muted);
+    box-shadow: none;
+}
+
+.ghost-btn {
+	background: transparent;
+	color: var(--text-muted);
+	border: 1px solid var(--border-soft);
+	padding: 0.6rem 1rem;
+	border-radius: 12px;
+	font-weight: 600;
+	font-family: 'Manrope', sans-serif;
+	cursor: pointer;
+    transition: all 0.2s;
+}
+
+.ghost-btn:hover {
+	color: var(--text-main);
+	background: var(--bg-panel-soft);
+	border-color: var(--text-muted);
+}
+
+/* Layout Utilities */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: 0.5rem; }
+.gap-4 { gap: 1rem; }
+.spacer { flex: 1; }
+.full-width { width: 100%; }
+.mt-4 { margin-top: 1rem; }
+
+/* Material Tweaks */
+.mat-mdc-card {
+    border-radius: 16px !important;
+    background: var(--bg-panel) !important;
+    color: var(--text-main) !important;
+}
+
+.mat-drawer-container {
+    background-color: var(--bg-page) !important;
+}

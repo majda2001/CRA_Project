@@ -1,0 +1,107 @@
+<section class="cra-container" *ngIf="cra">
+  <header class="panel cra-header">
+    <div>
+      <p class="eyebrow">Saisie mensuelle</p>
+      <h1>CRA {{ monthName }} {{ currentYear }}</h1>
+    </div>
+
+    <div class="header-actions">
+      <div class="month-nav">
+        <button mat-icon-button type="button" (click)="changeMonth(-1)"><mat-icon>chevron_left</mat-icon></button>
+        <span class="month-selector">{{ monthName }} {{ currentYear }}</span>
+        <button mat-icon-button type="button" (click)="changeMonth(1)"><mat-icon>chevron_right</mat-icon></button>
+      </div>
+
+      <app-status-badge [status]="cra.status"></app-status-badge>
+
+      <button class="ghost-btn" type="button" (click)="fillWholeMonthOneClick()" *ngIf="canEdit()">
+        Remplir tout le mois (1 clic)
+      </button>
+
+      <button class="btn-primary" type="button" (click)="submitCra()" *ngIf="canSubmit()">Soumettre le CRA</button>
+    </div>
+  </header>
+
+  <section class="panel feedback-panel" *ngIf="!isInDeclarationWindow() && !canEdit() && cra.status !== 'SUBMITTED' && cra.status !== 'APPROVED'">
+    <p class="feedback-title">Fenetre de declaration fermee</p>
+    <p class="feedback-message">La saisie et la soumission du CRA sont autorisees uniquement entre le {{ config.windowStartDay }} et le {{ config.windowEndDay }} du mois. Le reste du temps, le CRA est verrouille.</p>
+  </section>
+
+  <section class="panel feedback-panel warning-panel" *ngIf="cra.status === 'INVALIDATED'">
+    <p class="feedback-title">CRA Invalide</p>
+    <p class="feedback-message">Votre CRA a ete invalide ("{{ cra.motifRejet }}"). Veuillez le corriger et le soumettre a nouveau.</p>
+  </section>
+
+  <section class="panel feedback-panel warning-panel" *ngIf="cra.status === 'REJECTED' && isInDeclarationWindow()">
+     <p class="feedback-title">CRA Rejete</p>
+     <p class="feedback-message">Votre CRA a ete rejete ("{{ cra.motifRejet }}"). Veuillez le corriger pendant cette periode de declaration.</p>
+  </section>
+  
+  <section class="panel feedback-panel" *ngIf="!isInDeclarationWindow() && !canEdit() && cra.status === 'REJECTED'">
+     <p class="feedback-title">CRA Rejete (Attente fenetre)</p>
+     <p class="feedback-message">Votre CRA a ete rejete ("{{ cra.motifRejet }}"). Vous pourrez le corriger lors de la prochaine periode de declaration ({{ config.windowStartDay }}-{{ config.windowEndDay }}).</p>
+  </section>
+
+  <section class="panel feedback-panel" *ngIf="isInDeclarationWindow() && canEdit()">
+    <p class="feedback-title">Saisie en cours</p>
+    <p class="feedback-message">La soumission est ouverte ({{ config.windowStartDay }} au {{ config.windowEndDay }}). Verifiez vos absences et validez.</p>
+  </section>
+
+  <section class="panel feedback-panel" *ngIf="(cra.status === 'REJECTED' || cra.status === 'INVALIDATED') && cra.motifRejet">
+    <p class="feedback-title">Motif admin</p>
+    <p class="feedback-message">{{ cra.motifRejet }}</p>
+  </section>
+
+  <section class="panel calendar-panel">
+    <div class="calendar-grid">
+      <div class="calendar-header" *ngFor="let dayName of weekDays">{{ dayName }}</div>
+
+      <div class="calendar-day empty" *ngFor="let empty of emptyDays"></div>
+
+      <button
+        class="calendar-day"
+        type="button"
+        *ngFor="let day of calendarDays"
+        [class.weekend]="day.isWeekend"
+        (click)="openDayModal(day)"
+        [disabled]="!canEdit()"
+      >
+        <div class="date-number">{{ day.dayNumber }}</div>
+
+        <div class="activity-content" *ngIf="day.activity">
+          <div class="activity-chip" [ngClass]="day.activity.type">
+            {{ day.activity.type }}
+            <span *ngIf="day.activity.duree < 1">({{ day.activity.duree }}j)</span>
+          </div>
+          <small *ngIf="day.activity.missionName">{{ day.activity.missionName }}</small>
+        </div>
+      </button>
+    </div>
+  </section>
+
+  <div class="modal-backdrop" *ngIf="showDayModal" (click)="closeDayModal()">
+    <section class="modal panel" (click)="$event.stopPropagation()" tabindex="0" (keydown.escape)="closeDayModal()">
+      <h2>Edition du {{ selectedDateLabel }}</h2>
+
+      <div class="field-wrap">
+        <label class="field-label">Type d'absence</label>
+        <select class="field" [(ngModel)]="editType">
+          <option *ngFor="let option of activityTypes" [value]="option">{{ option }}</option>
+        </select>
+        <small class="hint">Mission/intercontrat sont calcules automatiquement selon les affectations admin.</small>
+      </div>
+
+      <div class="field-wrap">
+        <label class="field-label">Duree (jour)</label>
+        <input class="field" type="number" min="0" max="1" step="0.5" [(ngModel)]="editDuree" />
+      </div>
+
+      <div class="modal-actions">
+        <button class="ghost-btn" type="button" (click)="closeDayModal()">Annuler</button>
+        <button class="btn-primary" type="button" (click)="saveDay()" [disabled]="savingDay">
+          {{ savingDay ? 'Enregistrement...' : 'Enregistrer' }}
+        </button>
+      </div>
+    </section>
+  </div>
+</section>

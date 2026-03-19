@@ -1,0 +1,118 @@
+<section class="page-shell">
+  <header class="page-header">
+    <div class="header-content">
+      <p class="eyebrow">Administration</p>
+      <h1>Affectations</h1>
+      <p class="subtitle">Gerez les affectations des collaborateurs aux missions.</p>
+    </div>
+    <button class="btn-primary" type="button" (click)="openCreateModal()">
+      <span class="icon">+</span>
+      Nouvelle affectation
+    </button>
+  </header>
+
+  <div class="content-card">
+    <div class="toolbar">
+      <div class="search-wrap">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input
+          type="text"
+          placeholder="Rechercher par collaborateur ou mission..."
+          class="search-input"
+          (input)="filter($event)"
+        />
+      </div>
+
+      <div class="filters-group">
+        <select class="filter-select" (change)="filterStatus($event)">
+          <option value="">Toutes les periodes</option>
+          <option value="active">Actives</option>
+          <option value="ended">Terminees</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <div *ngIf="loading" class="skeleton-wrap">
+        <div class="skeleton-row" *ngFor="let item of skeletonItems"></div>
+      </div>
+
+      <table *ngIf="!loading" class="modern-table">
+        <thead>
+          <tr>
+            <th>Collaborateur</th>
+            <th>Mission</th>
+            <th>Periode</th>
+            <th class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let assignment of filteredAssignments">
+            <td>
+              <div class="user-cell">
+                <div class="avatar-circle bg-purple">
+                  {{ getInitials(assignment.collaborateurName) }}
+                </div>
+                <span class="name">{{ assignment.collaborateurName }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="mission-badge">{{ assignment.missionTitle }}</span>
+            </td>
+            <td>
+              <div class="meta-cell">
+                <span class="role-text">Du {{ assignment.dateDebut }}</span>
+                <span class="email">au {{ assignment.dateFin ?? '(non definie dans la mission)' }}</span>
+              </div>
+            </td>
+            <td class="text-right">
+              <button class="action-btn" (click)="openEditModal(assignment)" title="Modifier">E</button>
+              <button class="action-btn delete" (click)="deleteAssignment(assignment)" title="Supprimer">X</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="empty-state" *ngIf="!loading && filteredAssignments.length === 0">
+        <div class="empty-icon">O</div>
+        <h3>Aucune affectation</h3>
+        <p>Creez une nouvelle affectation pour lier un collaborateur a une mission.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
+    <section class="modal" (click)="$event.stopPropagation()">
+      <header class="modal-header">
+        <h2>{{ editMode ? 'Modifier affectation' : 'Nouvelle affectation' }}</h2>
+        <button class="close-btn" (click)="closeModal()">X</button>
+      </header>
+
+      <form [formGroup]="assignmentForm" (ngSubmit)="submitForm()" class="modal-form">
+        <div class="form-group">
+          <label>Collaborateur</label>
+          <select formControlName="collaborateurId">
+            <option [ngValue]="null" disabled>Selectionner un collaborateur</option>
+            <option *ngFor="let c of collaborateurs" [value]="c.id">{{ c.firstName }} {{ c.lastName }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Mission</label>
+          <select formControlName="missionId">
+            <option [ngValue]="null" disabled>Selectionner une mission</option>
+            <option *ngFor="let m of missions" [value]="m.id">{{ m.titre }}</option>
+          </select>
+          <small class="hint">Les dates d'affectation reprennent automatiquement la periode de mission.</small>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-ghost" type="button" (click)="closeModal()">Annuler</button>
+          <button class="btn-primary" type="submit" [disabled]="assignmentForm.invalid || saving">
+            {{ saving ? 'Enregistrement...' : (editMode ? 'Mettre a jour' : 'Creer') }}
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+</section>

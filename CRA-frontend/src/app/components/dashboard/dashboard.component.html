@@ -1,0 +1,156 @@
+<section class="dashboard-shell" *ngIf="vm$ | async as vm">
+  <header class="hero panel">
+    <div>
+      <p class="eyebrow">Tableau de bord</p>
+      <h1>Bonjour</h1>
+      <p class="subtitle">Voici un apercu de l'activite et des taches en attente.</p>
+    </div>
+
+  </header>
+
+  <div class="stats-grid" *ngIf="vm.user.role === 'ADMIN'">
+    <article class="panel stat-card">
+      <div class="stat-icon blue"><mat-icon>group</mat-icon></div>
+      <div class="stat-content">
+        <h3>{{ vm.stats.totalCollaborators }}</h3>
+        <p>Total collaborateurs</p>
+        <small class="trend positive">+{{ vm.stats.totalCollaborators > 0 ? '1' : '0' }} nouveaute</small>
+      </div>
+    </article>
+
+    <article class="panel stat-card">
+      <div class="stat-icon purple"><mat-icon>assignment_turned_in</mat-icon></div>
+      <div class="stat-content">
+        <h3>{{ vm.stats.crasSubmitted }}</h3>
+        <p>CRA soumis (ce mois)</p>
+        <small class="trend neutral">Cycle en cours</small>
+      </div>
+    </article>
+
+    <article class="panel stat-card">
+      <div class="stat-icon orange"><mat-icon>pending_actions</mat-icon></div>
+      <div class="stat-content">
+        <h3>{{ vm.stats.pendingValidation }}</h3>
+        <p>En attente de validation</p>
+        <small class="trend warning">Action requise</small>
+      </div>
+    </article>
+
+    <article class="panel stat-card">
+      <div class="stat-icon green"><mat-icon>trending_up</mat-icon></div>
+      <div class="stat-content">
+        <h3>{{ vm.stats.approvalRate }}%</h3>
+        <p>Taux d'approbation</p>
+        <small class="trend positive">Global</small>
+      </div>
+    </article>
+  </div>
+
+  <div class="stats-grid" *ngIf="vm.user.role !== 'ADMIN'">
+    <article class="panel stat-card">
+      <div class="stat-icon blue"><mat-icon>calendar_today</mat-icon></div>
+      <div class="stat-content">
+        <h3>Actif</h3>
+        <p>Mon statut</p>
+        <small class="trend positive">Compte operationnel</small>
+      </div>
+    </article>
+  </div>
+
+  <div class="dashboard-main-grid" *ngIf="vm.user.role === 'ADMIN'">
+    <article class="panel chart-panel">
+      <header class="panel-header">
+        <h3>Evolution des CRA</h3>
+        <small>6 derniers mois</small>
+      </header>
+      <div class="chart-container" *ngIf="hasTrendData(vm.stats.monthlyTrend); else noTrendData">
+        <div class="chart-legend top">
+          <span class="legend-item"><span class="dot total"></span> Total CRA</span>
+          <span class="legend-item"><span class="dot approved"></span> Approuves</span>
+        </div>
+        <div class="bar-chart">
+          <div class="bar-group" *ngFor="let month of vm.stats.monthlyTrend">
+            <div
+              class="bar total"
+              [style.height.%]="getBarHeight(month.total, getTrendScale(vm.stats.monthlyTrend))"
+              [title]="'Total: ' + month.total"
+            ></div>
+            <div
+              class="bar approved"
+              [style.height.%]="getBarHeight(month.approved, getTrendScale(vm.stats.monthlyTrend))"
+              [title]="'Approuves: ' + month.approved"
+            ></div>
+            <span class="label">{{ month.month }}</span>
+          </div>
+        </div>
+        <div class="chart-legend">
+          <span class="legend-item"><span class="dot total"></span> Total CRA</span>
+          <span class="legend-item"><span class="dot approved"></span> Approuves</span>
+        </div>
+      </div>
+      <ng-template #noTrendData>
+        <div class="chart-empty">
+          <p>Aucune donnee CRA sur les 6 derniers mois.</p>
+        </div>
+      </ng-template>
+    </article>
+
+    <article class="panel donut-panel">
+      <header class="panel-header">
+        <h3>Statuts - Ce mois</h3>
+        <small>Repartition</small>
+      </header>
+      <div class="donut-container">
+        <div class="donut-chart" [style]="getDonutGradient(vm.stats.statusDistribution)">
+          <div class="donut-hole">
+            <span class="total">{{ vm.stats.crasSubmitted }}</span>
+            <span class="label">Total</span>
+          </div>
+        </div>
+        <div class="donut-legend">
+          <div class="legend-row" *ngFor="let item of vm.stats.statusDistribution">
+            <span class="dot" [style.background-color]="item.color"></span>
+            <span class="name">{{ item.status }}</span>
+            <span class="value">{{ item.count }}</span>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <section class="panel table-panel">
+    <header class="panel-header">
+      <h3>Dernieres actions</h3>
+      <a routerLink="/admin/cras" class="view-all">Voir tout</a>
+    </header>
+    <div class="table-responsive">
+      <table class="simple-table">
+        <thead>
+          <tr>
+            <th>Collaborateur</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cra of vm.stats.recentActivity">
+            <td>
+              <div class="user-cell">
+                <div class="avatar-circle">{{ cra.collaborateurName?.charAt(0) }}</div>
+                <div class="user-info">
+                  <span class="name">{{ cra.collaborateurName }}</span>
+                </div>
+              </div>
+            </td>
+            <td>{{ cra.activities.length ? 'Calcul en cours...' : 'Non defini' }}</td>
+            <td><app-status-badge [status]="cra.status"></app-status-badge></td>
+            <td><a routerLink="/admin/cras" class="action-link">Gerer</a></td>
+          </tr>
+          <tr *ngIf="vm.stats.recentActivity.length === 0">
+            <td colspan="4" class="empty-cell">Aucune activite recente.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</section>

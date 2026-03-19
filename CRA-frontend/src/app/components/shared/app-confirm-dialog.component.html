@@ -1,0 +1,10 @@
+<div class="confirm-backdrop" *ngIf="(ui.confirmState$ | async) as dialog" (click)="cancel()">
+  <section class="confirm-box panel" (click)="$event.stopPropagation()" tabindex="0">
+    <h3>{{ dialog.title }}</h3>
+    <p>{{ dialog.message }}</p>
+    <div class="actions">
+      <button type="button" class="ghost" (click)="cancel()">{{ dialog.cancelLabel }}</button>
+      <button type="button" class="primary" (click)="confirm()" autofocus>{{ dialog.confirmLabel }}</button>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,84 @@
+.toast-host {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1200;
+  display: grid;
+  gap: 0.55rem;
+  width: min(360px, calc(100vw - 2rem));
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: all;
+  border-radius: 12px;
+  padding: 0.7rem 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid transparent;
+  box-shadow: 0 10px 24px rgba(12, 22, 44, 0.18);
+  animation: toastIn 220ms ease;
+  backdrop-filter: blur(4px);
+}
+
+.toast.success {
+  background: #e4fbf2;
+  color: #127f60;
+  border-color: #c2f0de;
+}
+
+.toast.error {
+  background: #ffe9ef;
+  color: #a63c56;
+  border-color: #f8cfda;
+}
+
+.toast.info {
+  background: #e9f0ff;
+  color: #3459c0;
+  border-color: #cbd9ff;
+}
+
+button {
+  border: none;
+  background: transparent;
+  font-weight: 700;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.7;
+  padding: 0.2rem;
+}
+
+button:hover {
+  opacity: 1;
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+:host-context([data-theme='dark']) .toast.success {
+  background: #193a31;
+  border-color: #2f6d5c;
+  color: #8ff0cf;
+}
+
+:host-context([data-theme='dark']) .toast.error {
+  background: #3a1f2a;
+  border-color: #7f4154;
+  color: #ffb2c2;
+}
+
+:host-context([data-theme='dark']) .toast.info {
+  background: #1d2b48;
+  border-color: #3a548f;
+  color: #b8cbff;
+}

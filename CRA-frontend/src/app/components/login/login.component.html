@@ -1,0 +1,60 @@
+<div class="auth-page">
+  <div class="bg-mesh"></div>
+  <div class="bg-grid"></div>
+
+  <section class="login-card" aria-label="Connexion">
+    <header class="brand-header">
+      <div class="brand-logo-wrap" aria-hidden="true">
+        <img class="brand-logo" src="assets/CBX.png" alt="CBX Group" />
+      </div>
+      <div class="brand-text">
+        <div class="brand-title">CBX</div>
+        <div class="brand-subtitle">GROUP</div>
+      </div>
+    </header>
+
+    <div class="welcome-block">
+      <h1>Bienvenue</h1>
+      <p>Connectez-vous a votre espace CBX Group</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <label for="email">Adresse email</label>
+      <div class="input-shell" [class.invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+        <mat-icon class="input-icon" aria-hidden="true">mail</mat-icon>
+        <input id="email" type="email" formControlName="email" placeholder="vous@cbxgroup.com" autocomplete="email" />
+      </div>
+      <small class="hint error" *ngIf="loginForm.get('email')?.hasError('email') && loginForm.get('email')?.touched">
+        Format d'email invalide
+      </small>
+
+      <label for="password">Mot de passe</label>
+      <div class="input-shell">
+        <mat-icon class="input-icon" aria-hidden="true">lock</mat-icon>
+        <input
+          id="password"
+          [type]="showPassword ? 'text' : 'password'"
+          formControlName="password"
+          placeholder="Entrez votre mot de passe"
+          autocomplete="current-password"
+        />
+        <button
+          type="button"
+          class="toggle-password"
+          (click)="showPassword = !showPassword"
+          [attr.aria-label]="showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
+        >
+          <mat-icon aria-hidden="true">{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+      </div>
+
+      <div *ngIf="error" class="hint error">
+        {{ error }}
+      </div>
+
+      <button class="submit-btn" type="submit" [disabled]="loginForm.invalid || loading">
+        {{ loading ? 'Connexion...' : 'Se connecter' }}
+      </button>
+    </form>
+  </section>
+</div>

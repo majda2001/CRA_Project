@@ -1,0 +1,68 @@
+<mat-sidenav-container class="shell">
+  <mat-sidenav mode="side" opened class="sidebar" [style.width.px]="284">
+    <div class="brand-block">
+      <div class="brand-icon"><img src="assets/CBX.png" alt="CBX Group" /></div>
+      <div>
+        <h2>CBX Group</h2>
+        <p>CRA Workspace</p>
+      </div>
+    </div>
+
+    <mat-nav-list class="nav-list">
+      <a mat-list-item routerLink="/dashboard" routerLinkActive="active-link" class="nav-item" *ngIf="isAdmin$ | async">
+        <mat-icon matListItemIcon>dashboard</mat-icon>
+        <span matListItemTitle>Tableau de bord</span>
+      </a>
+
+      <a mat-list-item routerLink="/cra" routerLinkActive="active-link" class="nav-item" *ngIf="isCollaborateur$ | async">
+        <mat-icon matListItemIcon>calendar_month</mat-icon>
+        <span matListItemTitle>Mon CRA</span>
+      </a>
+
+      <ng-container *ngIf="isAdmin$ | async">
+        <div mat-subheader class="nav-subheader">Administration</div>
+        <a mat-list-item routerLink="/admin/collaborateurs" routerLinkActive="active-link" class="nav-item">
+          <mat-icon matListItemIcon>people</mat-icon>
+          <span matListItemTitle>Collaborateurs</span>
+        </a>
+        <a mat-list-item routerLink="/admin/missions" routerLinkActive="active-link" class="nav-item">
+          <mat-icon matListItemIcon>assignment</mat-icon>
+          <span matListItemTitle>Missions</span>
+        </a>
+        <a mat-list-item routerLink="/admin/assignments" routerLinkActive="active-link" class="nav-item">
+          <mat-icon matListItemIcon>link</mat-icon>
+          <span matListItemTitle>Affectations</span>
+        </a>
+        <a mat-list-item routerLink="/admin/cras" routerLinkActive="active-link" class="nav-item">
+          <mat-icon matListItemIcon>task</mat-icon>
+          <span matListItemTitle>Validation CRA</span>
+        </a>
+      </ng-container>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar class="topbar">
+      <div class="topbar-title">
+        <h3>Gestion CRA</h3>
+        <p>Pilotage des activites et validations</p>
+      </div>
+
+      <span class="spacer"></span>
+
+      <button mat-flat-button class="theme-btn" (click)="toggleTheme()" title="Changer le theme">
+        <mat-icon>{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
+        <span>{{ isDarkMode ? 'Clair' : 'Sombre' }}</span>
+      </button>
+
+      <button mat-flat-button class="logout-btn" (click)="logout()" title="Deconnexion">
+        <mat-icon>logout</mat-icon>
+        <span>Deconnexion</span>
+      </button>
+    </mat-toolbar>
+
+    <div class="content-wrapper" [@routeFade]="routeAnimationState">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

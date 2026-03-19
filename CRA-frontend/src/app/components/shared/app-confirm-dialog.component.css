@@ -1,0 +1,80 @@
+.confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1150;
+  display: grid;
+  place-items: center;
+  background: rgba(10, 18, 35, 0.5);
+  padding: 1rem;
+  animation: fadeIn 160ms ease;
+}
+
+.confirm-box {
+  width: min(520px, 100%);
+  padding: 1rem;
+  border-radius: 14px;
+  background: #fff;
+  animation: popIn 180ms ease;
+  outline: none;
+}
+
+h3 { margin: 0; font-size: 1.1rem; }
+
+p {
+  margin: 0.7rem 0 1rem;
+  color: #627494;
+  line-height: 1.45;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.55rem;
+}
+
+.ghost,
+.primary {
+  border-radius: 10px;
+  padding: 0.55rem 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.ghost {
+  border-color: #d4ddf1;
+  background: #fff;
+  color: #344d78;
+}
+
+.primary {
+  border: none;
+  background: linear-gradient(95deg, #2f4dff, #4f67ff);
+  color: #fff;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+:host-context([data-theme='dark']) .confirm-box {
+  background: #15233c;
+  border: 1px solid #2f4267;
+  color: #e9efff;
+}
+
+:host-context([data-theme='dark']) .confirm-box p {
+  color: #9cb0d3;
+}
+
+:host-context([data-theme='dark']) .ghost {
+  border-color: #324a74;
+  background: #162640;
+  color: #dbe6ff;
+}

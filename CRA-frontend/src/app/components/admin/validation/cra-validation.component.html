@@ -1,0 +1,132 @@
+<section class="page-shell">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Administration</p>
+      <h1>Validation des CRA</h1>
+      <p class="subtitle">Controlez et validez les comptes rendus d'activite.</p>
+    </div>
+
+    <div class="month-selector">
+      <button class="nav-btn" type="button" (click)="previousMonth()">&lt;</button>
+      <span class="current-month">{{ currentMonthName }} {{ currentYear }}</span>
+      <button class="nav-btn" type="button" (click)="nextMonth()">&gt;</button>
+    </div>
+  </header>
+
+  <div class="stats-overview">
+    <article class="stat-card pending">
+      <span class="value">{{ countByStatus('SUBMITTED') }}</span>
+      <span class="label">En attente</span>
+    </article>
+    <article class="stat-card approved">
+      <span class="value">{{ countByStatus('APPROVED') }}</span>
+      <span class="label">Valides</span>
+    </article>
+    <article class="stat-card rejected">
+      <span class="value">{{ countByStatus('REJECTED') }}</span>
+      <span class="label">Rejetes</span>
+    </article>
+  </div>
+
+  <div class="content-card">
+    <div class="toolbar">
+      <div class="search-wrap">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Filtrer par collaborateur..."
+          (input)="filter($event)"
+        />
+      </div>
+
+      <select class="filter-select" [(ngModel)]="statusFilter" (change)="applyFilters()">
+        <option value="ALL">Tous les statuts</option>
+        <option value="SUBMITTED">En attente</option>
+        <option value="APPROVED">Valide</option>
+        <option value="REJECTED">Rejete</option>
+      </select>
+    </div>
+
+    <div *ngIf="loading" class="skeleton-wrap">
+      <div class="skeleton-row" *ngFor="let item of skeletonItems"></div>
+    </div>
+
+    <!-- Add a grouping or hint if CRAs span multiple months -->
+     
+    <table class="modern-table" *ngIf="!loading && filteredCras.length > 0">
+      <thead>
+        <tr>
+          <th>Collaborateur</th>
+          <th>Mois</th>
+          <th>Statut</th>
+          <th>Motif admin</th>
+          <th class="text-right actions-head">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cra of filteredCras">
+          <td>{{ cra.collaborateurName || cra.collaborateurEmail || '-' }}</td>
+          <td>{{ cra.mois }}/{{ cra.annee }}</td>
+          <td>
+            <span class="status-pill" [ngClass]="statusClass(cra.status)">
+              {{ getStatusLabel(cra.status) }}
+            </span>
+          </td>
+          <td>
+            <span class="motif-inline">{{ cra.motifRejet || '-' }}</span>
+          </td>
+          <td class="text-right actions-cell">
+            <div class="actions-slot">
+              <div class="actions-group" *ngIf="cra.status === 'SUBMITTED'; else nonSubmittedActions">
+                <button class="btn-action approve" type="button" (click)="validate(cra)">Valider</button>
+                <button class="btn-action reject" type="button" (click)="openRejectModal(cra)">Rejeter</button>
+              </div>
+              <ng-template #nonSubmittedActions>
+                <div class="actions-group" *ngIf="cra.status === 'APPROVED'; else noActionState">
+                  <button class="btn-action reject" type="button" (click)="openInvalidateModal(cra)">Invalider</button>
+                </div>
+              </ng-template>
+              <ng-template #noActionState>
+                <span class="processed-label">{{ getActionLabel(cra.status) }}</span>
+              </ng-template>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="empty-state" *ngIf="!loading && filteredCras.length === 0">
+      <h3>Aucun CRA trouve</h3>
+      <p>Pas de CRA a traiter pour la periode selectionnee.</p>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="showMotifModal" (click)="closeMotifModal()">
+    <section class="motif-modal" (click)="$event.stopPropagation()">
+      <header class="motif-header">
+        <h2>{{ motifAction === 'reject' ? 'Motif de rejet' : 'Motif d\'invalidation' }}</h2>
+        <button class="close-btn" type="button" (click)="closeMotifModal()">X</button>
+      </header>
+
+      <p class="motif-subtitle">
+        CRA de {{ motifCra?.collaborateurName || motifCra?.collaborateurEmail }}
+      </p>
+
+      <textarea
+        class="motif-textarea"
+        [(ngModel)]="motifInput"
+        rows="4"
+        maxlength="500"
+        placeholder="Saisissez le motif visible par le collaborateur..."
+      ></textarea>
+
+      <div class="motif-footer">
+        <button class="btn-cancel" type="button" (click)="closeMotifModal()">Annuler</button>
+        <button class="btn-confirm" type="button" [disabled]="sendingMotif" (click)="submitMotif()">
+          {{ sendingMotif ? 'Envoi...' : (motifAction === 'reject' ? 'Confirmer le rejet' : 'Confirmer l\'invalidation') }}
+        </button>
+      </div>
+    </section>
+  </div>
+</section>

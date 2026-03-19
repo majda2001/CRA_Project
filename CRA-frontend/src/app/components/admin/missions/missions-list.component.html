@@ -1,0 +1,115 @@
+<section class="page-shell">
+  <header class="page-header">
+    <div class="header-content">
+      <p class="eyebrow">Administration</p>
+      <h1>Gestion des missions</h1>
+      <p class="subtitle">Planifiez les interventions, pilotes de TJM et periodes d'affectation.</p>
+    </div>
+    <button class="btn-primary" type="button" (click)="openCreateModal()">
+      <span class="icon">+</span> Nouvelle mission
+    </button>
+  </header>
+
+  <div class="content-card">
+    <div class="table-responsive">
+      <div *ngIf="loading" class="skeleton-wrap">
+        <div class="skeleton-row" *ngFor="let item of skeletonItems"></div>
+      </div>
+
+      <table *ngIf="!loading" class="modern-table">
+        <thead>
+          <tr>
+            <th>Mission</th>
+            <th>TJM</th>
+            <th>Periode</th>
+            <th class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let mission of filteredMissions">
+            <td>
+              <div class="user-cell">
+                <div class="avatar-circle bg-blue">{{ mission.titre.charAt(0) }}</div>
+                <div class="user-info">
+                  <span class="name">{{ mission.titre }}</span>
+                  <span class="email">
+                    {{ mission.description | slice: 0 : 50 }}{{ mission.description.length > 50 ? '...' : '' }}
+                  </span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="contract-badge">{{ mission.tjm }} EUR</span>
+            </td>
+            <td>
+              <div class="meta-cell">
+                <span class="role-text">Du {{ mission.dateDebut }}</span>
+                <span class="email">au {{ mission.dateFin || 'En cours' }}</span>
+              </div>
+            </td>
+            <td class="text-right">
+              <button class="action-btn" (click)="openEditModal(mission)" title="Modifier">E</button>
+              <button class="action-btn delete" (click)="deleteMission(mission)" title="Supprimer">X</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="empty-state" *ngIf="!loading && filteredMissions.length === 0">
+        <div class="empty-icon">&#128194;</div>
+        <h3>Aucune mission trouvee</h3>
+        <p>Creez une nouvelle mission pour commencer.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
+    <section class="modal" (click)="$event.stopPropagation()">
+      <header class="modal-header">
+        <h2>{{ editMode ? 'Modifier mission' : 'Nouvelle mission' }}</h2>
+        <button class="close-btn" (click)="closeModal()">X</button>
+      </header>
+
+      <form [formGroup]="missionForm" (ngSubmit)="submitForm()" class="modal-form">
+        <div class="form-group">
+          <label>Titre de la mission</label>
+          <input type="text" formControlName="titre" placeholder="Ex: Developpement Angular" />
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea class="field area" formControlName="description" placeholder="Details de la mission..."></textarea>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Date de debut</label>
+            <input type="date" formControlName="dateDebut" />
+          </div>
+          <div class="form-group">
+            <label>Date de fin (optionnel)</label>
+            <input type="date" formControlName="dateFin" />
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>TJM (Tarif Journalier)</label>
+            <input type="number" formControlName="tjm" placeholder="Ex: 500" />
+          </div>
+          <div class="form-group">
+            <label>Motif (optionnel)</label>
+            <input type="text" formControlName="motif" placeholder="Ref. dossier..." />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-ghost" type="button" (click)="closeModal()">Annuler</button>
+          <button class="btn-primary" type="submit" [disabled]="missionForm.invalid || saving">
+            {{ saving ? 'Enregistrement...' : (editMode ? 'Mettre a jour' : 'Creer') }}
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+</section>

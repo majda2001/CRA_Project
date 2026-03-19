@@ -1,0 +1,12 @@
+<section class="toast-host" aria-live="polite" aria-atomic="true">
+  <article
+    *ngFor="let toast of ui.toasts$ | async"
+    class="toast"
+    [class.success]="toast.type === 'success'"
+    [class.error]="toast.type === 'error'"
+    [class.info]="toast.type === 'info'"
+  >
+    <span>{{ toast.message }}</span>
+    <button type="button" (click)="ui.dismissToast(toast.id)" aria-label="Fermer la notification">x</button>
+  </article>
+</section>
