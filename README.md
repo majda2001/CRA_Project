@@ -14,10 +14,8 @@ Application web de gestion des CRA (Compte Rendu d Activite), avec deux espaces 
 - [Architecture du projet](#architecture-du-projet)
 - [Donnees demo](#donnees-demo)
 - [Configuration](#configuration)
-- [Demarrage rapide](#demarrage-rapide)
-- [Compilation](#compilation)
 - [Test API avec Swagger](#test-api-avec-swagger)
-- [Video de demonstration](#video-de-demonstration)
+
 
 ## Quick Start en 60 secondes
 1. Configurer le backend:
@@ -74,6 +72,8 @@ Pour tester l activation par email d un collaborateur:
 3. Relancer le backend.
 4. Activer le collaborateur depuis l espace Admin.
 
+
+## Configuration
 Les donnees Admin sont configurees dans:
 - [CRA-backend/.env](CRA-backend/.env)
 
