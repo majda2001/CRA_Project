@@ -20,7 +20,7 @@ Application web de gestion des CRA (Compte Rendu d Activite), avec deux espaces 
 
 ## Quick Start en 60 secondes
 1. Configurer le backend:
-	- creer ou mettre a jour les donnees critiques de l'application [CRA-backend/.env](CRA-backend/.env)
+	- copier [CRA-backend/.env.example](CRA-backend/.env.example) en `CRA-backend/.env` puis renseigner les valeurs (ce fichier n'est pas versionne)
 2. Lancer le backend (depuis [CRA-backend](CRA-backend)):
 	
 3. Lancer le frontend (depuis [CRA-frontend](CRA-frontend)):
@@ -75,8 +75,8 @@ Pour tester l activation par email d un collaborateur:
 
 
 ## Configuration
-Les donnees Admin sont configurees dans:
-- [CRA-backend/.env](CRA-backend/.env)
+Les donnees Admin et les secrets sont configures dans `CRA-backend/.env` (non versionne), a creer a partir de:
+- [CRA-backend/.env.example](CRA-backend/.env.example)
 
 Variables importantes:
 - JWT_SECRET
